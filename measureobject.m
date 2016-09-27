@@ -1,3 +1,19 @@
+function [returnValue, returnValue2] = measureobject( nbrepeat, interactive, justCalibrate, filepathname1)
+%MEASUREOBJECT
+%   Calculate the pixel length of a calibration target, and use it to 
+%   measure a distance on a target image. 
+%   
+%   [(D) =] measure() is the real distance. By default, 1 set of points
+%   will be used and measurement will be done.
+%   P = measure( ..., justCalibrate=true[,...]) is the pixel size. No
+%   measurements will be done.
+%   [D,P] = measure(...) is the vector of real distance(null if
+%   justCalibrate=true), D, and pixel size, P.
+%   
+% @param nbrepeat number of times the user would like to take measurements.
+% @param interactive TRUE for displaying results in figures
+% @param filepathname1 the path to the calbiration image
+% 
 %
 % This MATLAB code was originally developed by Arganthael Berson in 
 % Dec. 15, 2010. It is used to translate image pixels to real length units.
@@ -18,18 +34,6 @@
 % Measure a distance of an object
 % Can use a calibration image
 % Arganthael Dec. 15th 2010
-
-function [returnValue, returnValue2] = measureobject( nbrepeat, interactive, justCalibrate, filepathname1)
-%   Calculate the pixel length of a calibration target, and use it to 
-%   measure a distance on a target image. 
-% 
-% @param nbrepeat number of times the user would like to take measurements.
-% @param interactive TRUE for displaying results in figures
-% @param filepathname1 the path to the calbiration image
-% 
-
-% We need at least one arg to start things off.
-% TODO: perhaps this can be handled more gracefully.
 
 
 % assign returnValues first.
@@ -142,6 +146,10 @@ end;
 % Stop here if justCalibrate
 if( justCalibrate )
     returnValue = pixel_size;
+    if( nargout == 2)
+        returnValue = null;
+        returnValue2 = pixel_size;
+    end;
     return;
 end;
 
