@@ -39,7 +39,7 @@ DryStdErr =  0.3087; %0.5604; %based on DryNew.tif using OpenTiffTry.m...this ma
 t_wall = 3200;      %micrometers
 
 
-  theta_c = asin(1/RefInd);
+  theta_c = asin(1/RefInd); % defines the critical angle!!
 
 %   Radx=2;   %creates variable Radx
 %   Rady=2;   %creates variable Rady
@@ -70,14 +70,14 @@ t_wall = 3200;      %micrometers
   end;
 
 %Eliminate incorrect data  
-x_dry = DryDiam/4;
+x_dry = DryDiam/4;  %TODO: this is removing entire images, which would mismatch with the timestamp...
 i = 1;
 for n=1:NumImages
     if Ry(n)/Rx(n) > 0.8 && Ry(n)/Rx(n) < 1.2 && (Ry(n)/2) > x_dry %&& Ry > (261.7899/2)
-    Radx(i,:) = Rx(n);
-    Rady(i,:) = Ry(n); 
-    RMSerror(i,:) = RMS(n);
-    i = i+1;
+        Radx(i,:) = Rx(n);
+        Rady(i,:) = Ry(n); 
+        RMSerror(i,:) = RMS(n);
+        i = i+1;
     end;
 end
   

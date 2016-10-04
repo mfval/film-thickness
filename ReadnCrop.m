@@ -37,13 +37,13 @@ gs=w;
 mf = medfilt2(gs, [3,3]);
 %figure, imshow(mf), impixelinfo;
 
-%%Stretch Image
+%%Stretch Image Contrast
 strimg = StretchImage(mf);
 %figure, imshow(strimg), impixelinfo;
 %% Threshold the image
 %%% The threshold value may need to be changed for a given image set
 %imft = strimg>170;%150;  %130 %120
-imft = strimg>40;%150;  %130 %120
+imft = strimg>150;  %130 %120
 %strelement = strel('disk',150); %150
 %dil = imdilate(imft,strelement);
 %figure, imshow(imft), impixelinfo;
@@ -60,7 +60,7 @@ for j=1:length(B1)
 end
 
 [val,valindex]=sort(S);
-boundary2=B1{valindex(length(B1))};
+boundary2=B1{valindex(length(B1))}; %perhaps not necessary?
 N=length(valindex);
 
 Cen=X(valindex(N)).Centroid;
