@@ -66,7 +66,7 @@ classdef FilmThicknessCalculator < handle
         %% Set the default configurations.
         function defaultConfig( obj )
             configMapKeys = {'plotflag', 'saveflag', 'pixSize', 'refIndexFluid','refIndexWall','dryDiameter','dryStdErr','thicknessWall','dataFile','saveFile'};
-            configMapValues = {false, true, 25.8042, 1.26 ,1.517, 418.4232, 0.3087, 3200, './sample/sample.tiff', '~/Desktop/test.mat'};
+            configMapValues = {false, true, 25.8042, 1.26 ,1.517, 418.4232, 0.3087, 3200, './samples/sample.tiff', '~/Desktop/test.mat'};
             obj.config = containers.Map(configMapKeys, configMapValues);
         end;
         
