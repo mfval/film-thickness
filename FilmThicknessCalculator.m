@@ -3,7 +3,7 @@ classdef FilmThicknessCalculator < handle
         
         plotflag = false;
         saveflag = true;
-        
+        rInfo;
         config = containers.Map();
         
     end;
@@ -66,7 +66,7 @@ classdef FilmThicknessCalculator < handle
         %% Set the default configurations.
         function defaultConfig( obj )
             configMapKeys = {'plotflag', 'saveflag', 'pixSize', 'refIndexFluid','refIndexWall','dryDiameter','dryStdErr','thicknessWall','dataFile','saveFile'};
-            configMapValues = {false, true, 25.8042, 1.26 ,1.517, 418.4232, 0.3087, 3200, './samples/sample.tiff', '~/Desktop/test.mat'};
+            configMapValues = {false, true, 25.8042, 1.26 ,1.517, 418.4232, 0.3087, 3200, './samples/sampleStack.tiff', '~/Desktop/test.mat'};
             obj.config = containers.Map(configMapKeys, configMapValues);
         end;
         
@@ -77,7 +77,16 @@ classdef FilmThicknessCalculator < handle
             obj.config('critAngle') = obj.criticalAngle( obj.config('refIndexFluid') );
             
             % TODO: determine what kind of image we are processing, and how
-            % many?
+            % many? For now, just stack tiffs.
+            
+            info = imfinfo( obj.config('dataFile') );
+            if( numel(info) > 1)
+                obj.config('numImages') = numel(info);
+            else
+                error('Wrong file type');
+            end;
+            
+            
             % ...
             
             
@@ -93,15 +102,30 @@ classdef FilmThicknessCalculator < handle
             wBar = waitbar(0,'Processing Images...', 'Name', 'Processing Images...','CreateCancelBtn', 'setappdata(gcbf,''canceling'',1)');
             setappdata(wBar,'canceling',0)
             
+            %   1 rX  |...
+            %   2 rY  |...
+            %   3 rms |...
+            %
+            rX = zeros(1, obj.config('numImages'));
+            rY = zeros(1, obj.config('numImages'));
+            rRms = zeros(1, obj.config('numImages'));
+            
             % parallel for-loop
             parfor n = 1 : obj.config( 'numImages' )
-                obj.processParfor( obj );
+                [rX(n), rY(n), rRms(n)] = obj.processParfor( n );
             end;
+            
+            % rInfo to obj properties
+            obj.rInfo = [rX; rY; rRms];
+            
         end;
          
         %% Process data - Parfor
-        function processParfor( obj )
+        function [rx,ry,rms] = processParfor( obj, n )
             
+            imgIn = imread( obj.config('dataFile',n) );
+            imgIn = ReadnCrop( imgIn, obj.config('plotflag') );
+            [rx,ry,rms] = LocateRadii(imgIn, obj.config('plotflag'));
             
         end;
     end;
